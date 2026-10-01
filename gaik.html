@@ -6,16 +6,21 @@
     <title>Grafik Pracy GAIK</title>
     <style>
         :root {
-            --bg-color: #fcf9f2; /* Ciepły, kremowy odcień tła */
+            --bg-color: #fcf9f2; 
             --cell-bg: #fff;
             --border-color: #d2c5bc;
-            --text-main: #4a2c11; /* Ciemny brąz z logo */
+            --text-main: #4a2c11; 
             
-            /* Kolory z logo */
-            --open-shift: #e88d2d; /* Pomarańczowy liść */
-            --normal-shift: #669933; /* Zielony liść */
-            --day-off: #cc4455; /* Malinowy liść */
-            --custom-shift: #7a5c4d; /* Brąz wpadający w szarość */
+            /* Unikalne kolory dla każdej zmiany */
+            --shift-open: #e88d2d; /* 6:30 - Pomarańczowy */
+            --shift-7: #42a5f5; /* 7-15 - Jasnoniebieski */
+            --shift-730: #26a69a; /* 7:30-15:30 - Turkusowy */
+            --shift-8: #ab47bc; /* 8-16 - Fioletowy */
+            --shift-845: #5c6bc0; /* 8:45-16:45 - Granatowy */
+            
+            --day-off: #669933; /* Wolne (W) - Zielony (z logo) */
+            --sick-leave: #cc4455; /* L4 - Malinowy (z logo) */
+            --custom-shift: #7a5c4d; /* Inna zmiana - Brązowy */
         }
 
         body {
@@ -29,7 +34,6 @@
             height: 100vh;
         }
 
-        /* Kontener na logo */
         .logo-container {
             text-align: center;
             background: #fff;
@@ -37,7 +41,7 @@
         }
 
         .logo-container img {
-            max-height: 70px; /* Ograniczenie wielkości, by nie zdominowało ekranu */
+            max-height: 70px;
             width: auto;
         }
 
@@ -86,7 +90,7 @@
         table {
             border-collapse: collapse;
             width: 100%;
-            min-width: 900px;
+            min-width: 950px;
         }
 
         th, td {
@@ -113,7 +117,7 @@
             position: sticky;
             top: 0;
             z-index: 1;
-            padding: 5px;
+            padding: 4px;
             color: var(--text-main);
         }
 
@@ -126,10 +130,15 @@
             transition: background-color 0.1s;
         }
 
-        /* Klasy kolorów zmian dopasowane do logo */
-        .shift-open { background-color: var(--open-shift) !important; color: white !important; font-size: 11px;}
-        .shift-normal { background-color: var(--normal-shift) !important; color: white !important; font-size: 11px;}
+        /* Klasy kolorów komórek */
+        .shift-open { background-color: var(--shift-open) !important; color: white !important; font-size: 11px;}
+        .shift-7 { background-color: var(--shift-7) !important; color: white !important; font-size: 11px;}
+        .shift-730 { background-color: var(--shift-730) !important; color: white !important; font-size: 11px;}
+        .shift-8 { background-color: var(--shift-8) !important; color: white !important; font-size: 11px;}
+        .shift-845 { background-color: var(--shift-845) !important; color: white !important; font-size: 11px;}
         .shift-off { background-color: var(--day-off) !important; color: white !important; font-size: 14px;}
+        .shift-l4 { background-color: var(--sick-leave) !important; color: white !important; font-size: 12px;}
+        .shift-custom { background-color: var(--custom-shift) !important; color: white !important; font-size: 11px;}
         
         td:not(:first-child) {
             background-color: var(--cell-bg);
@@ -149,7 +158,7 @@
 
         .tool-btn {
             flex: 1 1 20%;
-            padding: 10px 2px;
+            padding: 8px 2px;
             font-size: 12px;
             font-weight: bold;
             color: white;
@@ -160,20 +169,35 @@
         }
 
         .tool-btn.active {
-            box-shadow: inset 0 0 0 3px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 0 3px rgba(0,0,0,0.6);
             transform: scale(0.93);
         }
 
-        .btn-open { background: var(--open-shift); }
-        .btn-normal { background: var(--normal-shift); }
+        /* Kolory przycisków stempli */
+        .btn-open { background: var(--shift-open); }
+        .btn-7 { background: var(--shift-7); }
+        .btn-730 { background: var(--shift-730); }
+        .btn-8 { background: var(--shift-8); }
+        .btn-845 { background: var(--shift-845); }
         .btn-off { background: var(--day-off); }
+        .btn-l4 { background: var(--sick-leave); }
         .btn-clear { background: #b0a39a; color: var(--text-main); }
         .btn-custom { background: var(--custom-shift); flex-basis: 100%; margin-top: 5px; padding: 12px;}
+
+        /* Mała czcionka dla dni tygodnia */
+        .day-name {
+            font-size: 9px;
+            font-weight: normal;
+            margin-top: 2px;
+        }
+        .weekend-text {
+            color: #cc4455;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Sekcja z Logo -->
     <div class="logo-container">
         <img src="https://gaik.edu.pl/wp-content/uploads/2025/02/Gaik_logo_napis_03-300x186.png" alt="GAIK Logo">
     </div>
@@ -192,12 +216,13 @@
     </div>
 
     <div class="toolbar">
-        <button class="tool-btn active btn-open" data-val="6:30-14:30">6:30-14:30</button>
-        <button class="tool-btn btn-normal" data-val="7-15">7-15</button>
-        <button class="tool-btn btn-normal" data-val="7:30-15:30">7:30-15:30</button>
-        <button class="tool-btn btn-normal" data-val="8-16">8-16</button>
-        <button class="tool-btn btn-normal" data-val="8:45-16:45">8:45-16:45</button>
-        <button class="tool-btn btn-off" data-val="W">Wolne (W)</button>
+        <button class="tool-btn active btn-open" data-val="6:30-14:30">6:30</button>
+        <button class="tool-btn btn-7" data-val="7-15">7-15</button>
+        <button class="tool-btn btn-730" data-val="7:30-15:30">7:30</button>
+        <button class="tool-btn btn-8" data-val="8-16">8-16</button>
+        <button class="tool-btn btn-845" data-val="8:45-16:45">8:45</button>
+        <button class="tool-btn btn-off" data-val="W">Wolne</button>
+        <button class="tool-btn btn-l4" data-val="L4 💊">L4 💊</button>
         <button class="tool-btn btn-clear" data-val="">Usuń</button>
         <button class="tool-btn btn-custom" id="tool-custom" data-val="custom">Wpisz inną zmianę...</button>
     </div>
@@ -206,7 +231,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // Konfiguracja Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDNfjtR4nKFw9UAAAvHSxiLuQN_ePspEeQ",
             authDomain: "gaik-1b8f1.firebaseapp.com",
@@ -222,19 +246,20 @@
             const db = getDatabase(app);
 
             const employees = ["Karolina Wicik", "Wiktoria Tomanek", "Luiza Miśta", "Klaudia Fuss", "Julia Bil"];
+            const daysOfWeekNames = ["Nd", "Pn", "Wt", "Śr", "Cz", "Pt", "Sb"];
+            
             let currentDate = new Date();
             let selectedToolValue = "6:30-14:30";
             let scheduleData = {};
             let unsubscribeListener = null;
 
-            // Obsługa klikania w paski narzędzi
             document.querySelectorAll('.tool-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
                     e.target.classList.add('active');
                     
                     if (e.target.dataset.val === 'custom') {
-                        const customShift = prompt("Wpisz tekst (np. L4, Urlop, 10:00-18:00):");
+                        const customShift = prompt("Wpisz tekst (np. Opieka, Urlop, 10-18):");
                         if (customShift !== null && customShift.trim() !== '') {
                             selectedToolValue = customShift;
                             e.target.textContent = `Własne: ${customShift}`;
@@ -250,7 +275,6 @@
                 return `${year}-${month}`;
             }
 
-            // Pobieranie danych z bazy (z obsługą błędu pobierania)
             function loadMonthData() {
                 const year = currentDate.getFullYear();
                 const month = currentDate.getMonth();
@@ -264,11 +288,10 @@
                     scheduleData[monthKey] = snapshot.val() || {};
                     renderCalendarUI(year, month, monthKey);
                 }, (error) => {
-                    alert("⚠️ Odmowa dostępu do bazy. Sprawdź reguły (Rules) w Firebase! Błąd: " + error.message);
+                    alert("⚠️️ Odmowa dostępu do bazy. Błąd: " + error.message);
                 });
             }
 
-            // Rysowanie grafiku
             function renderCalendarUI(year, month, monthKey) {
                 const monthNames = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"];
                 document.getElementById('month-display').textContent = `${monthNames[month]} ${year}`;
@@ -277,7 +300,20 @@
                 
                 let headerHtml = '<th>Pracownik</th>';
                 for (let i = 1; i <= daysInMonth; i++) {
-                    headerHtml += `<th>${i}</th>`;
+                    // Wyliczanie dnia tygodnia
+                    const d = new Date(year, month, i);
+                    const dayOfWeek = d.getDay();
+                    const dayName = daysOfWeekNames[dayOfWeek];
+                    
+                    // Zaznaczenie weekendu na czerwono
+                    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+                    const weekendClass = isWeekend ? 'weekend-text' : '';
+
+                    headerHtml += `
+                        <th>
+                            <div class="${weekendClass}">${i}</div>
+                            <div class="day-name ${weekendClass}">${dayName}</div>
+                        </th>`;
                 }
                 document.getElementById('days-header').innerHTML = headerHtml;
 
@@ -288,9 +324,15 @@
                         const cellData = scheduleData[monthKey][`${empIndex}-${day}`] || '';
                         let colorClass = '';
                         
-                        if (cellData.startsWith('6:30')) colorClass = 'shift-open';
+                        // Rozpoznawanie kolorów na podstawie wpisanej wartości
+                        if (cellData === '6:30-14:30') colorClass = 'shift-open';
+                        else if (cellData === '7-15') colorClass = 'shift-7';
+                        else if (cellData === '7:30-15:30') colorClass = 'shift-730';
+                        else if (cellData === '8-16') colorClass = 'shift-8';
+                        else if (cellData === '8:45-16:45') colorClass = 'shift-845';
                         else if (cellData === 'W' || cellData.toLowerCase() === 'wolne') colorClass = 'shift-off';
-                        else if (cellData !== '') colorClass = 'shift-normal';
+                        else if (cellData.includes('L4')) colorClass = 'shift-l4';
+                        else if (cellData !== '') colorClass = 'shift-custom';
 
                         bodyHtml += `<td class="shift-cell ${colorClass}" data-emp="${empIndex}" data-day="${day}">${cellData}</td>`;
                     }
@@ -299,27 +341,29 @@
                 document.getElementById('schedule-body').innerHTML = bodyHtml;
             }
 
-            // Obsługa wpisywania zmian po kliknięciu kafelka
             document.getElementById('schedule-body').addEventListener('click', function(e) {
-                if (e.target.classList.contains('shift-cell')) {
-                    const empId = e.target.dataset.emp;
-                    const day = e.target.dataset.day;
+                // Jeśli kliknięto na kratkę (td) lub na to co jest w jej środku
+                let targetCell = e.target;
+                if (!targetCell.classList.contains('shift-cell') && targetCell.parentElement.classList.contains('shift-cell')) {
+                    targetCell = targetCell.parentElement;
+                }
+
+                if (targetCell.classList.contains('shift-cell')) {
+                    const empId = targetCell.dataset.emp;
+                    const day = targetCell.dataset.day;
                     const year = currentDate.getFullYear();
                     const month = currentDate.getMonth();
                     const monthKey = getMonthKey(year, month);
                     
-                    // Pokazujemy zmianę na ekranie od razu dla wygody
-                    e.target.textContent = selectedToolValue;
+                    targetCell.textContent = selectedToolValue;
                     
-                    // Zapisujemy w Firebase
                     set(ref(db, `grafik/${monthKey}/${empId}-${day}`), selectedToolValue)
                         .catch(error => {
-                            alert("⚠️ Nie udało się zapisać zmiany! Odrzucone przez Firebase. Błąd: " + error.message);
+                            alert("⚠️ Błąd bazy Firebase: " + error.message);
                         });
                 }
             });
 
-            // Zmiana miesięcy
             document.getElementById('prev-month').addEventListener('click', () => {
                 currentDate.setMonth(currentDate.getMonth() - 1);
                 loadMonthData();
